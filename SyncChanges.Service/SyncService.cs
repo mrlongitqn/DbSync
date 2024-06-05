@@ -47,9 +47,9 @@ namespace SyncChanges.Service
 
             try
             {
-                var timeout = int.Parse(ConfigurationManager.AppSettings["Timeout"]);
-                var interval = int.Parse(ConfigurationManager.AppSettings["Interval"]);
-                var dryRun = ConfigurationManager.AppSettings["DryRun"].Equals("true", StringComparison.OrdinalIgnoreCase);
+                var timeout = config.Timeout;
+                var interval = config.Interval;
+                var dryRun = config.DryRun;
 
                 CancellationTokenSource = new();
                 Synchronizer = new Synchronizer(config) { Timeout = timeout, Interval = interval, DryRun = dryRun };

@@ -37,6 +37,7 @@ namespace SyncChanges.Console
                 }
 
                 program.ConfigFiles.Add("config.json");
+
                 program.Sync();
 
                 return program.Error ? 1 : 0;
@@ -65,7 +66,11 @@ namespace SyncChanges.Console
                     continue;
                 }
 
-                Loop = config.Loop;
+                // InitSchema initSchema = new InitSchema(config);
+                // initSchema.Init();
+                //
+                // return;
+                Loop = !config.DryRun && config.Loop;
                 Interval = config.Interval;
                 Timeout = config.Timeout;
                 DryRun = config.DryRun;

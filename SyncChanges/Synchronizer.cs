@@ -595,7 +595,8 @@ namespace SyncChanges
                     if (table.HasIdentity)
                         insertSql =
                             $"set IDENTITY_INSERT {tableName} ON; {insertSql}; set IDENTITY_INSERT {tableName} OFF";
-                    Log.Debug($"Executing insert: {insertSql} ({FormatArgs(insertValues)})");
+                    //Log.Debug($"Executing insert: {insertSql} ({FormatArgs(insertValues)})");
+                    Log.Info($"Insert table {tableName}");
                     if (!DryRun)
                         db.Execute(insertSql, insertValues);
                     break;
@@ -607,7 +608,8 @@ namespace SyncChanges
                         string.Join(", ", updateColumnNames.Select((c, i) => $"{c} = @{i + change.Keys.Count}")),
                         PrimaryKeys(change));
                     var updateValues = change.GetValues();
-                    Log.Debug($"Executing update: {updateSql} ({FormatArgs(updateValues)})");
+                   // Log.Debug($"Executing update: {updateSql} ({FormatArgs(updateValues)})");
+                    Log.Info($"Update table {tableName}");
                     if (!DryRun)
                         db.Execute(updateSql, updateValues);
                     break;
@@ -616,7 +618,8 @@ namespace SyncChanges
                 case 'D':
                     var deleteSql = string.Format("delete from {0} where {1}", tableName, PrimaryKeys(change));
                     var deleteValues = change.Keys.Values.ToArray();
-                    Log.Debug($"Executing delete: {deleteSql} ({FormatArgs(deleteValues)})");
+                  //  Log.Debug($"Executing delete: {deleteSql} ({FormatArgs(deleteValues)})");
+                    Log.Info($"Delete from table {tableName}");
                     if (!DryRun)
                         db.Execute(deleteSql, deleteValues);
                     break;

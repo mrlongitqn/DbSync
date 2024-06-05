@@ -1,0 +1,4 @@
+Install Service:
+before: Check exist: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe
+1. CMD Line at Root Dir:  C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe .\SyncChanges.Service.exe
+2. CMD: SyncChanges.Service
