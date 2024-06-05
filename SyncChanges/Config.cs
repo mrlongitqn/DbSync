@@ -18,6 +18,12 @@ namespace SyncChanges
         /// The replication sets.
         /// </value>
         public List<ReplicationSet> ReplicationSets { get; private set; } = new List<ReplicationSet>();
+
+        public bool Loop { get; set; } = false;
+
+        public int Interval { get; set; } = 30;
+        public int Timeout { get; set; } = 0;
+        public bool DryRun { get; set; } = false;
     }
 
     /// <summary>
@@ -56,6 +62,13 @@ namespace SyncChanges
         /// The tables to be replicated.
         /// </value>
         public List<string> Tables { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Get or Set list columns by tables, just some columns define to update
+        /// </summary>
+        public List<TableColumns> TableColumns { get; set; } = new List<TableColumns>();
+
+        public int Interval { get; set; } = 30;
     }
 
     /// <summary>
@@ -78,5 +91,11 @@ namespace SyncChanges
         /// The connection string.
         /// </value>
         public string ConnectionString { get; set; }
+    }
+
+    public class TableColumns
+    {
+        public string TableName { get; set; }
+        public List<string> Columns { get; set; }
     }
 }

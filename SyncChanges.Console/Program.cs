@@ -15,8 +15,8 @@ namespace SyncChanges.Console
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        List<string> ConfigFiles;
-        bool DryRun;
+        List<string> ConfigFiles = new List<string>();
+        bool DryRun = false;
         bool Error = false;
         int Timeout = 0;
         bool Loop = false;
@@ -28,38 +28,15 @@ namespace SyncChanges.Console
             {
                 System.Console.OutputEncoding = Encoding.UTF8;
                 var program = new Program();
-                var showHelp = false;
+                
 
-                try
-                {
-                    var options = new OptionSet {
-                        { "h|help", "Show this message and exit", v => showHelp = v != null },
-                        { "d|dryrun", "Do not alter target databases, only perform a test run", v => program.DryRun = v != null },
-                        { "t|timeout=", "Database command timeout in seconds", (int v) => program.Timeout = v },
-                        { "l|loop", "Perform replication in a loop, periodically checking for changes", v => program.Loop = v != null },
-                        { "i|interval=", "Replication interval in seconds (default is 30); only relevant in loop mode", (int v) => program.Interval = v },
-                    };
-
-                    program.ConfigFiles = options.Parse(args);
-
-                    if (showHelp)
-                    {
-                        ShowHelp(options);
-                        return 0;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Error parsing command line arguments");
-                    return 1;
-                }
-
-                if (!program.ConfigFiles.Any())
+                if (!File.Exists("config.json"))
                 {
                     Log.Error("No config files supplied");
                     return 1;
                 }
 
+                program.ConfigFiles.Add("config.json");
                 program.Sync();
 
                 return program.Error ? 1 : 0;
@@ -71,21 +48,12 @@ namespace SyncChanges.Console
             }
         }
 
-        static void ShowHelp(OptionSet p)
-        {
-            System.Console.WriteLine("Usage: SyncChanges [OPTION]... CONFIGFILE...");
-            System.Console.WriteLine("Replicate database changes.");
-            System.Console.WriteLine();
-            System.Console.WriteLine("Options:");
-            p.WriteOptionDescriptions(System.Console.Out);
-        }
 
         void Sync()
         {
             foreach (var configFile in ConfigFiles)
             {
                 Config config = null;
-
                 try
                 {
                     config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile));
@@ -96,6 +64,11 @@ namespace SyncChanges.Console
                     Error = true;
                     continue;
                 }
+
+                Loop = config.Loop;
+                Interval = config.Interval;
+                Timeout = config.Timeout;
+                DryRun = config.DryRun;
 
                 try
                 {

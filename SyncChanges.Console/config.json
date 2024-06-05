@@ -1,0 +1,75 @@
+{
+  "Interval": 10, //Second time to loop
+  "Loop": true, //Perform replication in a loop, periodically checking for changes
+  "Timeout": 0, //Database command timeout in seconds
+  "DryRun": false, //Do not alter target databases, only perform a test run
+  "ReplicationSets": [
+    {
+      "Name": "Test",
+      "Source": {
+        "Name": "Primary",
+        "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=DbSource;Integrated Security=True;MultipleActiveResultSets=True"
+      },
+      "Destinations": [
+        {
+          "Name": "Secondary 1",
+          "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=DbDes;Integrated Security=True;MultipleActiveResultSets=True"
+        }
+        //{
+        //  "Name": "Secondary 2",
+        //  "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=DbDes;Integrated Security=True;MultipleActiveResultSets=True"
+        //}
+      ],
+      "Tables": [ "BAN_GIAM_HIEU", "HOC_VIEN", "CAN_BO_GIANG_VIEN" ],
+      "TableColumns": [
+        {
+          "TableName": "HOC_VIEN",
+          "Columns": [
+            "ID",
+            "HO_TEN",
+            "NGAY_SINH",
+            "GIOI_TINH_ID",
+            "EMAIL",
+            "DIEN_THOAI",
+            "CMTND",
+            "SO_BAO_HIEM",
+            "QUOC_TICH_ID",
+            "DAN_TOC_ID",
+            "TON_GIAO_ID",
+            "KHUYET_TAT_ID",
+            "TINH_THANH_ID",
+            "QUAN_HUYEN_ID",
+            "XA_PHUONG_ID",
+            "THON_XOM",
+            "NOI_SINH_TINH_THANH_ID",
+            "NOI_SINH_QUAN_HUYEN_ID",
+            "NOI_SINH_XA_PHUONG_ID"
+          ]
+        },
+        {
+          "TableName": "CAN_BO_GIANG_VIEN",
+          "Columns": [
+            "ID",
+            "HO_TEN",
+            "NGAY_SINH",
+            "CMTND",
+            "QUOC_TICH_ID",
+            "GIOI_TINH_ID",
+            "NGAY_TUYEN_DUNG",
+            "HINH_THUC_HOP_DONG_ID",
+            "HOC_HAM_ID",
+            "TRINH_DO_DAO_TAO_ID",
+            "CHUYEN_MON_DUOC_DAO_TAO",
+            "BAC_SI_CK_DUOC_SI_CK",
+            "SO_BAO_HIEM",
+            "TINH_THANH_ID",
+            "QUAN_HUYEN_ID",
+            "XA_PHUONG_ID",
+            "THON_XOM",
+            "IS_GIANG_DAY_CAC_MON_CHUNG"
+          ]
+        }
+      ]
+    }
+  ]
+}
