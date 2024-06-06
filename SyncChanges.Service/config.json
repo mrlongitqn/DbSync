@@ -3,6 +3,7 @@
   "Loop": true, //Perform replication in a loop, periodically checking for changes
   "Timeout": 0, //Database command timeout in seconds
   "DryRun": false, //Do not alter target databases, only perform a test run
+  "Init" :  false,
   "ReplicationSets": [
     {
       "Name": "Test",

@@ -15,7 +15,7 @@ namespace SyncChanges.Console
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        List<string> ConfigFiles = new List<string>();
+        string ConfigFile = "";
         bool DryRun = false;
         bool Error = false;
         int Timeout = 0;
@@ -28,7 +28,7 @@ namespace SyncChanges.Console
             {
                 System.Console.OutputEncoding = Encoding.UTF8;
                 var program = new Program();
-                
+
 
                 if (!File.Exists("config.json"))
                 {
@@ -36,7 +36,7 @@ namespace SyncChanges.Console
                     return 1;
                 }
 
-                program.ConfigFiles.Add("config.json");
+                program.ConfigFile = "config.json";
 
                 program.Sync();
 
@@ -52,54 +52,54 @@ namespace SyncChanges.Console
 
         void Sync()
         {
-            foreach (var configFile in ConfigFiles)
+            Config config = null;
+            try
             {
-                Config config = null;
-                try
-                {
-                    config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, $"Error reading configuration file {configFile}");
-                    Error = true;
-                    continue;
-                }
+                config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ConfigFile));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error reading configuration file {ConfigFile}");
+                Error = true;
+                return;
+            }
 
-                // InitSchema initSchema = new InitSchema(config);
-                // initSchema.Init();
-                //
-                // return;
-                Loop = !config.DryRun && config.Loop;
-                Interval = config.Interval;
-                Timeout = config.Timeout;
-                DryRun = config.DryRun;
+            if (config.Init)
+            {
+                InitSchema initSchema = new InitSchema(config);
+                initSchema.Init();
+                return;
+            }
 
-                try
+            Loop = !config.DryRun && config.Loop;
+            Interval = config.Interval;
+            Timeout = config.Timeout;
+            DryRun = config.DryRun;
+
+            try
+            {
+                var synchronizer = new Synchronizer(config) { DryRun = DryRun, Timeout = Timeout };
+                if (!Loop)
                 {
-                    var synchronizer = new Synchronizer(config) { DryRun = DryRun, Timeout = Timeout };
-                    if (!Loop)
-                    {
-                        var success = synchronizer.Sync();
-                        Error = Error || !success;
-                    }
-                    else
-                    {
-                        synchronizer.Interval = Interval;
-                        using var cancellationTokenSource = new CancellationTokenSource();
-                        System.Console.CancelKeyPress += (s, e) =>
-                        {
-                            cancellationTokenSource.Cancel();
-                            e.Cancel = true;
-                        };
-                        synchronizer.SyncLoop(cancellationTokenSource.Token);
-                    }
+                    var success = synchronizer.Sync();
+                    Error = Error || !success;
                 }
-                catch (Exception ex)
+                else
                 {
-                    Log.Error(ex, $"Error synchronizing databases for configuration {configFile}");
-                    Error = true;
+                    synchronizer.Interval = Interval;
+                    using var cancellationTokenSource = new CancellationTokenSource();
+                    System.Console.CancelKeyPress += (s, e) =>
+                    {
+                        cancellationTokenSource.Cancel();
+                        e.Cancel = true;
+                    };
+                    synchronizer.SyncLoop(cancellationTokenSource.Token);
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error synchronizing databases for configuration {ConfigFile}");
+                Error = true;
             }
         }
     }

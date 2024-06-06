@@ -176,7 +176,7 @@ namespace SyncChanges
                         using (var db = GetDatabase(replicationSet.Source.ConnectionString, DatabaseType.SqlServer2008))
                             version = db.ExecuteScalar<long>("select CHANGE_TRACKING_CURRENT_VERSION()");
 
-                        Log.Debug($"Current version of source in replication set {replicationSet.Name} is {version}.");
+                        Log.Info($"Current version of source in replication set {replicationSet.Name} is {version}.");
 
                         if (version > currentVersion)
                         {
@@ -458,12 +458,15 @@ namespace SyncChanges
                         "select snapshot_isolation_state from sys.databases where name = DB_NAME()") == 1;
                 if (snapshotIsolationEnabled)
                 {
-                    Log.Info($"Snapshot isolation is enabled in database {source.Name}");
+                    //Log.Info($"Snapshot isolation is enabled in database {source.Name}");
                     db.BeginTransaction(System.Data.IsolationLevel.Snapshot);
                 }
                 else
-                    Log.Info(
-                        $"Snapshot isolation is not enabled in database {source.Name}, ignoring all changes above current version");
+                {
+                    //Log.Info(
+                      //  $"Snapshot isolation is not enabled in database {source.Name}, ignoring all changes above current version");
+                }
+                    
 
                 changeInfo.Version = db.ExecuteScalar<long>("select CHANGE_TRACKING_CURRENT_VERSION()");
                 Log.Info($"Current version of database {source.Name} is {changeInfo.Version}");
@@ -492,7 +495,8 @@ namespace SyncChanges
                     sql +=
                         " order by coalesce(c.SYS_CHANGE_CREATION_VERSION, c.SYS_CHANGE_VERSION), c.SYS_CHANGE_OPERATION";
 
-                    Log.Debug($"Retrieving changes for table {tableName}: {sql}");
+                    //Log.Debug($"Retrieving changes for table {tableName}: {sql}");
+                    Log.Info($"Retrieving changes for table {tableName}");
 
                     db.OpenSharedConnection();
                     var cmd = db.CreateCommand(db.Connection, System.Data.CommandType.Text, sql, destinationVersion);

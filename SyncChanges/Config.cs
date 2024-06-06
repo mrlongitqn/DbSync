@@ -24,6 +24,7 @@ namespace SyncChanges
         public int Interval { get; set; } = 30;
         public int Timeout { get; set; } = 0;
         public bool DryRun { get; set; } = false;
+        public bool Init { get; set; } = false;
     }
 
     /// <summary>

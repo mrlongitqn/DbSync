@@ -3,24 +3,25 @@
   "Loop": true, //Perform replication in a loop, periodically checking for changes
   "Timeout": 0, //Database command timeout in seconds
   "DryRun": false, //Do not alter target databases, only perform a test run
+  "Init": true,
   "ReplicationSets": [
     {
-      "Name": "Test",
+      "Name": "Source",
       "Source": {
         "Name": "Primary",
-        "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=DbSource;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
+        "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=fpe;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
       },
       "Destinations": [
         {
           "Name": "Secondary 1",
-          "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=DbTest;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
+          "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=fpe_copy;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
         }
         //{
         //  "Name": "Secondary 2",
         //  "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=DbDes;Integrated Security=True;MultipleActiveResultSets=True"
         //}
       ],
-      "Tables": [ "BAN_GIAM_HIEU", "HOC_VIEN", "CAN_BO_GIANG_VIEN" ],
+      "Tables": [ "Diem_SinhVien", "Histoty", "LopHocPhan" ],
       "TableColumns": [
         {
           "TableName": "HOC_VIEN",

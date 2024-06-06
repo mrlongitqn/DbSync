@@ -1,39 +1,76 @@
 ﻿using NPoco;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using NLog.LayoutRenderers;
+using System.Xml.Linq;
+using NLog;
 
 namespace SyncChanges
 {
     public class InitSchema
     {
         private Config _config;
+        static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public InitSchema(Config config)
         {
             _config = config;
-            
         }
 
         public void Init()
         {
-            using (var sourceDb = new Database(_config.ReplicationSets[0].Source.ConnectionString, DatabaseType.SqlServer2005,
+            using (var sourceDb = new Database(_config.ReplicationSets[0].Source.ConnectionString,
+                       DatabaseType.SqlServer2005,
                        System.Data.SqlClient.SqlClientFactory.Instance))
-            using (var destinationDb = new Database(_config.ReplicationSets[0].Destinations[0].ConnectionString, DatabaseType.SqlServer2005,
+            using (var destinationDb = new Database(_config.ReplicationSets[0].Destinations[0].ConnectionString,
+                       DatabaseType.SqlServer2005,
                        System.Data.SqlClient.SqlClientFactory.Instance))
             {
-                var tables = sourceDb.Fetch<string>("SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'");
+                Log.Info("Init structure for tracking changes and sync database");
+                EnableTrackingChangesDb(sourceDb);
+
+                foreach (var table in _config.ReplicationSets[0].Tables)
+                {
+                    EnableTrackingTable(sourceDb, table);
+                }
 
                 foreach (var table in _config.ReplicationSets[0].Tables)
                 {
                     EnsureTableExists(sourceDb, destinationDb, table);
-                    // RemoveForeignKeysAndAllowNulls(destinationDb, table);
-                    // CopyData(sourceDb, destinationDb, table);
                 }
+
+                CopyData(sourceDb.ConnectionString, destinationDb.ConnectionString, _config.ReplicationSets[0].Tables);
+                Log.Info("Init and copy data completed");
             }
         }
+
+        private void EnableTrackingChangesDb(Database db)
+        {
+
+            Log.Info("Starting enable tracking for database source");
+            var dbSourceName = db.ExecuteScalar<string>("SELECT DB_NAME()");
+            var enableTrackingQuery = @$"alter database {dbSourceName}
+set change_tracking = on
+(change_retention = 2 days, auto_cleanup = on)";
+            db.Execute(enableTrackingQuery);
+            Log.Info("Enable tracking for database source completed");
+        }
+
+        private void EnableTrackingTable(Database db, string tableName)
+        {
+            Log.Info($"Enable tracking for table {tableName}");
+            var queryEnableTrackingTable = $@"alter table {tableName}
+enable change_tracking
+with (track_columns_updated = off)";
+            db.Execute(queryEnableTrackingTable);
+        }
+
         private void EnsureTableExists(Database sourceConnection, Database destinationConnection, string table)
         {
+            Log.Info($"Check/Create table {table} for destination database");
             var tableExistsQuery = $@"
         IF NOT EXISTS (SELECT * FROM information_schema.tables WHERE table_name = '{table}')
         BEGIN
@@ -104,5 +141,33 @@ namespace SyncChanges
             return createTableScript;
         }
 
+
+        private void CopyData(string sourceConnectionString, string destinationConnectionString, List<string> tables)
+        {
+            Log.Info($"Starting copy data from source to destination");
+            using (var sourceConnection = new SqlConnection(sourceConnectionString))
+            using (var destinationConnection = new SqlConnection(destinationConnectionString))
+            {
+                sourceConnection.Open();
+                destinationConnection.Open();
+
+                // Lấy dữ liệu từ bảng nguồn
+                foreach (var table in tables)
+                {
+                    Log.Info($"Copy data from table {table}");
+                    using (var command = new SqlCommand($"SELECT * FROM {table}", sourceConnection))
+                    using (var reader = command.ExecuteReader())
+                    {
+                        // Sử dụng SqlBulkCopy để chèn dữ liệu vào bảng đích
+                        using (var bulkCopy = new SqlBulkCopy(destinationConnection))
+                        {
+                            bulkCopy.DestinationTableName = table;
+                            bulkCopy.WriteToServer(reader);
+                        }
+                    }
+                }
+            }
+            Log.Info($"Copy data from source to destination completed");
+        }
     }
 }
