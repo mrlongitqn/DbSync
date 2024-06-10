@@ -206,6 +206,11 @@ with (track_columns_updated = off)";
                         using (var bulkCopy = new SqlBulkCopy(destinationConnection))
                         {
                             bulkCopy.DestinationTableName = table.TableName;
+                            foreach (var key in table.Keys)
+                            {
+                                bulkCopy.ColumnMappings.Add(key, key);
+                            }
+                          
                             bulkCopy.WriteToServer(reader);
                         }
                     }

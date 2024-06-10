@@ -7,15 +7,15 @@
   //1: Enable tracking on Source DB, 2: Create tables in destination, 3: Create SyncInfo to destination 4: Copy Data from source to destination
   "ReplicationSets": [
     {
-      "Name": "Source",
+      "Name": "MIS_KT",
       "Source": {
         "Name": "FPE",
-        "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=fpe;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
+        "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=KT1;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
       },
       "Destinations": [
         {
           "Name": "FPE destination",
-          "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=fpe_rep;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
+          "ConnectionString": "Data Source=DESKTOP-LULH4C7;Initial Catalog=KT2;User ID=ndlong;Password=Long@2020;TrustServerCertificate=True;"
         }
         //{
         //  "Name": "Secondary 2",
@@ -23,25 +23,38 @@
         //}
       ],
       "ConfirmTable": true,
-      "Tables": [ "DM_ChucVu", "BaiViet" ],
+      "Tables": [ "D_HO_SO_SINH_VIEN", "S_DANH_MUC_LOP", "S_DANH_MUC_NGANH" ],
       "TableColumns": [
         {
-          "TableName": "DM_ChucVu",
-          "Keys": [ "Id" ],
+          "TableName": "D_HO_SO_SINH_VIEN",
+          "Keys": [ "MA_SINH_VIEN" ],
           "HasIdentity": false,
           "Columns": [
-            "Ten"
+            "LOP",
+            "HO_LOT",
+            "TEN",
+            "NGAY_SINH"
           ]
         },
         {
-          "TableName": "BaiViet",
-          "Keys": [ "Id" ],
-          "HasIdentity": true,
+          "TableName": "S_DANH_MUC_LOP",
+          "Keys": [ "LOP" ],
+          "HasIdentity": false,
           "Columns": [
-            "TenBaiViet",
-            "NoiDung",
-            "NgayTao",
-            "HinhAnh"
+            "HE",
+            "KHOA_HOC",
+            "KHOA",
+            "NGANH"
+          ]
+        },
+        {
+          "TableName": "S_DANH_MUC_NGANH",
+          "Keys": [ "MAKHOAHOC", "MANGANH"],
+          "HasIdentity": false,
+          "Columns": [
+            "MAHE",
+            "MAKHOA",
+            "TENNGANH"
           ]
         }
       ]
