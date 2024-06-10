@@ -64,10 +64,14 @@ namespace SyncChanges.Console
                 return;
             }
 
-            if (config.Init)
+            if (config.Init.Any())
             {
+                System.Console.WriteLine("Please type \"YES\" to confirm init database.");
+                var confirm = System.Console.ReadLine();
+                if (confirm != "YES") return;
                 InitSchema initSchema = new InitSchema(config);
                 initSchema.Init();
+
                 return;
             }
 

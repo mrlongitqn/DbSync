@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SyncChanges\SyncChanges.csproj" />
+    <ProjectReference Include="..\SyncDb.Encrypt\SyncDb.Encrypt.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration.Install" />

@@ -24,7 +24,7 @@ namespace SyncChanges
         public int Interval { get; set; } = 30;
         public int Timeout { get; set; } = 0;
         public bool DryRun { get; set; } = false;
-        public bool Init { get; set; } = false;
+        public int[] Init { get; set; }
     }
 
     /// <summary>
@@ -68,8 +68,7 @@ namespace SyncChanges
         /// Get or Set list columns by tables, just some columns define to update
         /// </summary>
         public List<TableColumns> TableColumns { get; set; } = new List<TableColumns>();
-
-        public int Interval { get; set; } = 30;
+        public bool ConfirmTable { get; set; } = false;
     }
 
     /// <summary>
@@ -98,5 +97,7 @@ namespace SyncChanges
     {
         public string TableName { get; set; }
         public List<string> Columns { get; set; }
+        public List<string> Keys { get; set; }
+        public bool HasIdentity { get; set; }
     }
 }

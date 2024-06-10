@@ -30,26 +30,46 @@ namespace SyncChanges
                        System.Data.SqlClient.SqlClientFactory.Instance))
             {
                 Log.Info("Init structure for tracking changes and sync database");
-                EnableTrackingChangesDb(sourceDb);
+                Array.Sort<int>(_config.Init);
 
-                foreach (var table in _config.ReplicationSets[0].Tables)
+                foreach (var i in _config.Init)
                 {
-                    EnableTrackingTable(sourceDb, table);
+                    switch (i)
+                    {
+                        case 1:
+                            EnableTrackingChangesDb(sourceDb);
+                            foreach (var table in _config.ReplicationSets[0].Tables)
+                            {
+                                EnableTrackingTable(sourceDb, table);
+                            }
+
+                            break;
+                        case 2:
+                            foreach (var table in _config.ReplicationSets[0].Tables)
+                            {
+                                EnsureTableExists(sourceDb, destinationDb, table);
+                            }
+
+                            break;
+                        case 3:
+                            CreateTableSyncInfo(sourceDb, destinationDb);
+                            break;
+                        case 4:
+                            CopyData(sourceDb.ConnectionString, destinationDb.ConnectionString,
+                                _config.ReplicationSets[0].TableColumns);
+                            break;
+                    }
                 }
 
-                foreach (var table in _config.ReplicationSets[0].Tables)
-                {
-                    EnsureTableExists(sourceDb, destinationDb, table);
-                }
 
-                CopyData(sourceDb.ConnectionString, destinationDb.ConnectionString, _config.ReplicationSets[0].Tables);
                 Log.Info("Init and copy data completed");
             }
         }
 
+
+        //1
         private void EnableTrackingChangesDb(Database db)
         {
-
             Log.Info("Starting enable tracking for database source");
             var dbSourceName = db.ExecuteScalar<string>("SELECT DB_NAME()");
             var enableTrackingQuery = @$"alter database {dbSourceName}
@@ -59,6 +79,7 @@ set change_tracking = on
             Log.Info("Enable tracking for database source completed");
         }
 
+        //1
         private void EnableTrackingTable(Database db, string tableName)
         {
             Log.Info($"Enable tracking for table {tableName}");
@@ -68,6 +89,7 @@ with (track_columns_updated = off)";
             db.Execute(queryEnableTrackingTable);
         }
 
+        //2
         private void EnsureTableExists(Database sourceConnection, Database destinationConnection, string table)
         {
             Log.Info($"Check/Create table {table} for destination database");
@@ -80,6 +102,7 @@ with (track_columns_updated = off)";
             destinationConnection.Execute(tableExistsQuery);
         }
 
+        //2
         private string GetCreateTableScript(Database sourceDb, string table)
         {
             var columns = sourceDb.Fetch<dynamic>($@"
@@ -141,8 +164,25 @@ with (track_columns_updated = off)";
             return createTableScript;
         }
 
+        //3
+        private void CreateTableSyncInfo(Database dbSource, Database dbDestination)
+        {
+            var queryVersion = "select CHANGE_TRACKING_CURRENT_VERSION()";
+            var currentVersion = dbSource.ExecuteScalar<int?>(queryVersion);
 
-        private void CopyData(string sourceConnectionString, string destinationConnectionString, List<string> tables)
+
+            if (currentVersion == null) return;
+            var query = $@"CREATE TABLE [dbo].[SyncInfo] (
+                                  [Id] int DEFAULT 1 NOT NULL PRIMARY KEY,
+                                  [Version] bigint  NOT NULL
+                                )";
+            dbDestination.Execute(query);
+            dbDestination.Execute(@$"INSERT INTO SyncInfo VALUES(1,{currentVersion})");
+        }
+
+        //4
+        private void CopyData(string sourceConnectionString, string destinationConnectionString,
+            List<TableColumns> tables)
         {
             Log.Info($"Starting copy data from source to destination");
             using (var sourceConnection = new SqlConnection(sourceConnectionString))
@@ -154,19 +194,24 @@ with (track_columns_updated = off)";
                 // Lấy dữ liệu từ bảng nguồn
                 foreach (var table in tables)
                 {
-                    Log.Info($"Copy data from table {table}");
-                    using (var command = new SqlCommand($"SELECT * FROM {table}", sourceConnection))
+                    Log.Info($"Copy data from table {table.TableName}");
+                    table.Keys.AddRange(table.Columns);
+                    var keys = string.Join(",", table.Keys);
+
+
+                    using (var command = new SqlCommand($"SELECT {keys} FROM {table.TableName}", sourceConnection))
                     using (var reader = command.ExecuteReader())
                     {
                         // Sử dụng SqlBulkCopy để chèn dữ liệu vào bảng đích
                         using (var bulkCopy = new SqlBulkCopy(destinationConnection))
                         {
-                            bulkCopy.DestinationTableName = table;
+                            bulkCopy.DestinationTableName = table.TableName;
                             bulkCopy.WriteToServer(reader);
                         }
                     }
                 }
             }
+
             Log.Info($"Copy data from source to destination completed");
         }
     }

@@ -74,31 +74,53 @@ namespace SyncChanges
 
                 Log.Info($"Getting replication information for replication set {replicationSet.Name}");
 
-                var tables = GetTables(replicationSet.Source);
-                foreach (var tableInfo in tables)
+                if (replicationSet.ConfirmTable)
                 {
-                    var tableName = tableInfo.Name.Replace("[", "").Replace("]", "");
-                    var tableColumns = replicationSet.TableColumns.FirstOrDefault(x =>
-                        x.TableName == tableName || x.TableName == tableName.Split('.')[1]);
-                    if (tableColumns != null)
+                    var listTables = new List<TableInfo>();
+                    foreach (var tableColumn in Config.ReplicationSets[i].TableColumns)
                     {
-                        tableInfo.OtherColumns = tableInfo.OtherColumns.Select(t => new { Column = t, Name = t.Replace("[", "").Replace("]", "") })
-                            .Where(t => tableColumns.Columns.Exists(r=>r == t.Name)).Select(t=>t.Column).ToList();
+                       var table = new TableInfo
+                       {
+                           Name = tableColumn.TableName,
+                           KeyColumns = tableColumn.Keys,
+                           OtherColumns = tableColumn.Columns,
+                           HasIdentity = tableColumn.HasIdentity
+                       };
+
+                       listTables.Add(table);
                     }
+                    Tables.Add(listTables);
+                }
+                else
+                {
+                    var tables = GetTables(replicationSet.Source);
+                    foreach (var tableInfo in tables)
+                    {
+                        var tableName = tableInfo.Name.Replace("[", "").Replace("]", "");
+                        var tableColumns = replicationSet.TableColumns.FirstOrDefault(x =>
+                            x.TableName == tableName || x.TableName == tableName.Split('.')[1]);
+                        if (tableColumns != null)
+                        {
+                            tableInfo.OtherColumns = tableInfo.OtherColumns.Select(t => new { Column = t, Name = t.Replace("[", "").Replace("]", "") })
+                                .Where(t => tableColumns.Columns.Exists(r => r == t.Name)).Select(t => t.Column).ToList();
+                        }
+                    }
+
+                    if (replicationSet.Tables != null && replicationSet.Tables.Any())
+                        tables = tables.Select(t => new { Table = t, Name = t.Name.Replace("[", "").Replace("]", "") })
+                            .Where(t => replicationSet.Tables.Exists(r => r == t.Name || r == t.Name.Split('.')[1]))
+                            .Select(t => t.Table).ToList();
+
+                    if (!tables.Any())
+                        Log.Warn("No tables to replicate (check if change tracking is enabled)");
+                    else
+                        Log.Info(
+                            $"Replicating {"table".ToQuantity(tables.Count, ShowQuantityAs.None)} {string.Join(", ", tables.Select(t => t.Name))}");
+
+                    Tables.Add(tables);
                 }
 
-                if (replicationSet.Tables != null && replicationSet.Tables.Any())
-                    tables = tables.Select(t => new { Table = t, Name = t.Name.Replace("[", "").Replace("]", "") })
-                        .Where(t => replicationSet.Tables.Exists(r => r == t.Name || r == t.Name.Split('.')[1]))
-                        .Select(t => t.Table).ToList();
-
-                if (!tables.Any())
-                    Log.Warn("No tables to replicate (check if change tracking is enabled)");
-                else
-                    Log.Info(
-                        $"Replicating {"table".ToQuantity(tables.Count, ShowQuantityAs.None)} {string.Join(", ", tables.Select(t => t.Name))}");
-
-                Tables.Add(tables);
+                
             }
 
             Initialized = true;
