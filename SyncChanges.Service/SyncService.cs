@@ -1,21 +1,13 @@
-﻿using Newtonsoft.Json;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using NLog;
 
-namespace SyncChanges.Service
+namespace DbSync.Service
 {
     public partial class SyncChanges : ServiceBase
     {

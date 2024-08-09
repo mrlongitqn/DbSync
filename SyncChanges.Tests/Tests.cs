@@ -9,6 +9,7 @@ using NUnit.Framework;
 using SyncChanges;
 using System.Threading;
 using System.Xml.Linq;
+using DbSync;
 
 namespace SyncChanges.Tests
 {

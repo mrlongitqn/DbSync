@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SyncChanges
+namespace DbSync
 {
     class ChangeInfo
     {

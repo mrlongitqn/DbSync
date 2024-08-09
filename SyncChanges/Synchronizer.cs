@@ -1,13 +1,12 @@
-﻿using Humanizer;
-using NLog;
-using NPoco;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading;
+using Humanizer;
+using NLog;
+using NPoco;
 
-namespace SyncChanges
+namespace DbSync
 {
     /// <summary>
     /// Allows replication of database changes from a source database to one or more destination databases.

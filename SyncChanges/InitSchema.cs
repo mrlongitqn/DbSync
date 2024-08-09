@@ -1,14 +1,11 @@
-﻿using NPoco;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using NLog.LayoutRenderers;
-using System.Xml.Linq;
 using NLog;
+using NPoco;
 
-namespace SyncChanges
+namespace DbSync
 {
     public class InitSchema
     {

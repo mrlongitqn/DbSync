@@ -1,4 +1,4 @@
-﻿namespace SyncChanges.Service
+﻿namespace DbSync.Service
 {
     partial class SyncChanges
     {

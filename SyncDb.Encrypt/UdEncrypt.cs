@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SyncDb.Encrypt
+namespace DbSync.Encrypt
 {
     public static class UdEncrypt
     {

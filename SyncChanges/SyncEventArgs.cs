@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SyncChanges
+namespace DbSync
 {
     /// <summary>
     /// Provides data for the <see cref="Synchronizer.Synced"/> event.

@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncChanges", "SyncChanges\SyncChanges.csproj", "{85E1D583-E55F-42DB-89CD-B49F1420ECA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbSync", "SyncChanges\DbSync.csproj", "{85E1D583-E55F-42DB-89CD-B49F1420ECA7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncChanges.Console", "SyncChanges.Console\SyncChanges.Console.csproj", "{10944BF3-FBAD-405B-AC12-710039881184}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbSync.Console", "SyncChanges.Console\DbSync.Console.csproj", "{10944BF3-FBAD-405B-AC12-710039881184}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncChanges.Tests", "SyncChanges.Tests\SyncChanges.Tests.csproj", "{F2EEADF5-C0C6-4AE9-9AF0-EE9873C112AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbSync.Service", "SyncChanges.Service\DbSync.Service.csproj", "{D0F226BB-6423-40BD-A6DD-C1DF2E03F190}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncChanges.Service", "SyncChanges.Service\SyncChanges.Service.csproj", "{D0F226BB-6423-40BD-A6DD-C1DF2E03F190}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbSync.Encrypt", "SyncDb.Encrypt\DbSync.Encrypt.csproj", "{02B64F2B-247C-4D34-B295-038F9CEF45CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncDb.Encrypt", "SyncDb.Encrypt\SyncDb.Encrypt.csproj", "{02B64F2B-247C-4D34-B295-038F9CEF45CC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncDb.Encrypt.GUI", "SyncDb.Encrypt.GUI\SyncDb.Encrypt.GUI.csproj", "{204A0E52-49AB-4EAB-A9BC-E38BB26B605F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSync.Encrypt.GUI", "SyncDb.Encrypt.GUI\DbSync.Encrypt.GUI.csproj", "{204A0E52-49AB-4EAB-A9BC-E38BB26B605F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{10944BF3-FBAD-405B-AC12-710039881184}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10944BF3-FBAD-405B-AC12-710039881184}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10944BF3-FBAD-405B-AC12-710039881184}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2EEADF5-C0C6-4AE9-9AF0-EE9873C112AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2EEADF5-C0C6-4AE9-9AF0-EE9873C112AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2EEADF5-C0C6-4AE9-9AF0-EE9873C112AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2EEADF5-C0C6-4AE9-9AF0-EE9873C112AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0F226BB-6423-40BD-A6DD-C1DF2E03F190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0F226BB-6423-40BD-A6DD-C1DF2E03F190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0F226BB-6423-40BD-A6DD-C1DF2E03F190}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -48,5 +42,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D508B4B5-2F0E-4244-A2A1-BD2E116543EB}
 	EndGlobalSection
 EndGlobal

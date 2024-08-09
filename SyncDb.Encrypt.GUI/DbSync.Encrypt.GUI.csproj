@@ -80,9 +80,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyncDb.Encrypt\SyncDb.Encrypt.csproj">
+    <ProjectReference Include="..\SyncDb.Encrypt\DbSync.Encrypt.csproj">
       <Project>{02b64f2b-247c-4d34-b295-038f9cef45cc}</Project>
-      <Name>SyncDb.Encrypt</Name>
+      <Name>DbSync.Encrypt</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

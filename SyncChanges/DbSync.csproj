@@ -9,14 +9,14 @@
     <PackageVersion>$(AppVeyor_Build_Version)</PackageVersion>
     <Authors>Michael Ganss</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>SyncChanges</AssemblyName>
+    <AssemblyName>DbSync</AssemblyName>
     <PackageId>SyncChanges</PackageId>
     <PackageTags>replication synchronization sqlserver sql-server mirroring database</PackageTags>
     <PackageProjectUrl>https://github.com/mganss/SyncChanges</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mganss/SyncChanges/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/mganss/SyncChanges</RepositoryUrl>
-	  <RootNamespace>SyncChanges</RootNamespace>
+	  <RootNamespace>DbSync</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\SyncChanges.xml</DocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

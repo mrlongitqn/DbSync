@@ -10,14 +10,14 @@
     <FileVersion>$(AppVeyor_Build_Version).0</FileVersion>
     <PackageVersion>$(AppVeyor_Build_Version)</PackageVersion>
     <Authors>Michael Ganss</Authors>
-    <AssemblyName>SyncChanges.Console</AssemblyName>
+    <AssemblyName>DbSync.Console</AssemblyName>
     <PackageId>SyncChanges.Console</PackageId>
     <PackageTags>replication synchronization sqlserver sql-server mirroring database</PackageTags>
     <PackageProjectUrl>https://github.com/mganss/SyncChanges</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/mganss/SyncChanges/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/mganss/SyncChanges</RepositoryUrl>
-    <RootNamespace>SyncChanges.Console</RootNamespace>
+    <RootNamespace>DbSync.Console</RootNamespace>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -31,8 +31,8 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyncChanges\SyncChanges.csproj" />
-    <ProjectReference Include="..\SyncDb.Encrypt\SyncDb.Encrypt.csproj" />
+    <ProjectReference Include="..\SyncChanges\DbSync.csproj" />
+    <ProjectReference Include="..\SyncDb.Encrypt\DbSync.Encrypt.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="config.example.json">

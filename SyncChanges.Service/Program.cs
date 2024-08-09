@@ -17,7 +17,7 @@ namespace SyncChanges.Service
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new SyncChanges()
+                new DbSync.Service.SyncChanges()
             };
             ServiceBase.Run(ServicesToRun);
         }

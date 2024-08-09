@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DbSync.Encrypt;
 using SyncDb.Encrypt;
 
 namespace SyncDb.Encrypt.GUI

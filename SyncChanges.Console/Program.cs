@@ -8,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DbSync;
 
-namespace SyncChanges.Console
+namespace DbSync.Console
 {
     class Program
     {
